@@ -1,13 +1,18 @@
 .jumbotron{
-    background-color: rgb(250, 28, 28);
     color: black;
-  
     padding-top: 1%;
     padding-bottom: 1%;
+    margin:0 auto;
+  background-color: rgba(0, 0, 0, 0);
   }
   
+ body{
+    background-image: url("../images/trainstation2.jpg");
+    background-size: cover;
+  }
+
   #addTrainButton{
-    background-color: red;
+    background-color: blue;
     color: white;
   }
   
@@ -38,7 +43,7 @@
   }
   
   table{
-    border: 1px solid #e6e6e6;
+    border: 1px solid #f7f7fa;
   }
   
   th{
@@ -55,6 +60,8 @@
   .clock-display{
     font-size: 45px;
     font-weight: bold;
+    color: rgb(1, 0, 8);
+    text-shadow:black;text-shadow: 2px 4px white;
   }
   
   .panel-title{

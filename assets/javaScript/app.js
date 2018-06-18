@@ -1,13 +1,13 @@
  // Initialize Firebase
  var config = {
-    apiKey: "AIzaSyCWJ0rhTby4ZL70RV54EJmrpgUxpD5ZyPQ",
-    authDomain: "timesheet-bc08c.firebaseapp.com",
-    databaseURL: "https://timesheet-bc08c.firebaseio.com",
-    projectId: "timesheet-bc08c",
-    storageBucket: "timesheet-bc08c.appspot.com",
-    messagingSenderId: "84539145293"
-  };
-  firebase.initializeApp(config);
+  apiKey: "AIzaSyCWJ0rhTby4ZL70RV54EJmrpgUxpD5ZyPQ",
+  authDomain: "timesheet-bc08c.firebaseapp.com",
+  databaseURL: "https://timesheet-bc08c.firebaseio.com",
+  projectId: "timesheet-bc08c",
+  storageBucket: "timesheet-bc08c.appspot.com",
+  messagingSenderId: "84539145293"
+};
+firebase.initializeApp(config);
   
   var database = firebase.database();
   
@@ -19,7 +19,7 @@
   // ================================================================================
   
   
-  // Firebase change found - Pull New Data as soon as a database changes
+  // Firebase pulls New Data as soon as a database changes
   database.ref().on("value", function(snapshot) {
     
     // Collect updated Firebase Data
@@ -41,7 +41,7 @@
     var trainName = $("#nameInput").val().trim();
     var trainDestination = $("#destinationInput").val().trim();
     var trainFirstArrivalTime = $("#firstArrivalInput").val().trim();
-    var trainFreq = $("#frequencyInput").val().trim();
+    var trainFrequency = $("#frequencyInput").val().trim();
   
   
     // --------------------------- Sanity Checks for user inputs ---------------------------
@@ -57,7 +57,7 @@
       alert("Please enter a First Arrival Time!");
       return false;
     }
-    if(trainFreq == "" || trainFreq == null || trainFreq < 1){
+    if(trainFrequency == "" || trainFrequency == null || trainFrequency < 1){
       alert("Please enter an arrival frequency (in minutes)!" + "\n" + "It must be an integer greater than zero.");
       return false;
     }
@@ -105,7 +105,7 @@
       name: trainName,
       destination: trainDestination,
       firstArrival: trainFirstArrival,
-      frequency: trainFreq
+      frequency: trainFrequency
     });
   
   
@@ -145,7 +145,7 @@
       // Collect variable (done for each value from Firebase)
       var trainName = value.name;
       var trainDestination = value.destination;
-      var trainFreq = value.frequency;
+      var trainFrequency = value.frequency;
   
       var trainFirstArrivalTime = value.firstArrival;
       
@@ -156,28 +156,28 @@
   
   
       // ----------------------- Calculate values using Moment.js -----------------------
-      var convertedDate = moment(new Date(trainFirstArrivalTime));
+      var newDate = moment(new Date(trainFirstArrivalTime));
       
       // Calculate Minutes Away
         // Find How Many Minutes Ago the very First Train Departed
-      var minuteDiffFirstArrivalToNow = moment(convertedDate).diff( moment(), "minutes")*(-1);
+      var minuteDiffFirstArrivalToNow = moment(newDate).diff( moment(), "minutes")*(-1);
   
         // --------------- Sanity Check for New Train Times ---------------
         // Negative Value - If the Train never arrived yet (first arrival date is later than now)
         if(minuteDiffFirstArrivalToNow <= 0){
   
           // Train Departure = Current Time - First Arrival Time
-          trainMinutesAway = moment(convertedDate).diff( moment(), "minutes");
+          trainMinutesAway = moment(newDate).diff( moment(), "minutes");
   
           // Next Depature Time = First Departure Time (since the train has yet to come)
-          trainNextDepartureDate = convertedDate;
+          trainNextDepartureDate = newDate;
   
         }
         // Otherwise, the train arrvied in the past, so do the math
         else{
   
           // Next Train Departure = Frequency - (remainder of minutes from last departure)
-          trainMinutesAway = trainFreq - (minuteDiffFirstArrivalToNow % trainFreq);
+          trainMinutesAway = trainFrequency - (minuteDiffFirstArrivalToNow % trainFrequency);
   
           // Next Departure Time = Current Time + Minutes Away
           var trainNextDepartureDate = moment().add(trainMinutesAway, 'minutes');
@@ -194,7 +194,7 @@
       var newObject = {
         name: trainName,
         destination: trainDestination,
-        freq: trainFreq,
+        freq: trainFrequency,
         nextDeparture: trainNextDeparture,
         minAway: trainMinutesAway
       };
